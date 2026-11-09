@@ -32,8 +32,18 @@ export function collectBlenderCandidates(env = process.env, platform = process.p
         push(join(foundation, name, "blender.exe"), `glob:${foundation}`);
       }
     }
-    // 便携版通常放在非标准目录，扫一层常见根目录即可，不写死具体版本号
-    for (const root of ["D:/officeSoftWare", "C:/officeSoftWare", env.LOCALAPPDATA && join(env.LOCALAPPDATA, "Programs")]) {
+    // 便携版通常放在非标准目录，扫一层常见根目录即可，不写死具体版本号；
+    // 自定义位置用 BLENDER_SEARCH_DIRS（分号分隔）追加
+    const portableRoots = String(env.BLENDER_SEARCH_DIRS || "")
+      .split(";")
+      .map((item) => item.trim())
+      .filter(Boolean);
+    portableRoots.push(
+      env.LOCALAPPDATA && join(env.LOCALAPPDATA, "Programs"),
+      "C:/Blender",
+      "D:/Blender",
+    );
+    for (const root of portableRoots) {
       if (!root || !existsSync(root)) continue;
       for (const name of safeReadDir(root)) {
         if (!/^blender/i.test(name)) continue;

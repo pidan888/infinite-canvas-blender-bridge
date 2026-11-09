@@ -6,7 +6,7 @@
  * 这里提供一个本机 HTTP 服务：接收渲染任务、生成姿态人偶场景、回报进度与产物字节。
  * 渲染命令行由 `blender/render_clay.py` 决定；姿态关键点场景由独立脚本构建。
  *
- * 设计约束见 `交接/画布接入Blender-接入规范.md`：串行、可终止、只监听回环、不用字符串拼命令。
+ * 设计约束：串行、可终止、只监听回环、不用字符串拼命令。
  */
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";

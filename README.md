@@ -3,8 +3,10 @@
 画布的自定义模型脚本跑在 `canvas-proxy` 里，不能直接启动 Blender。
 这个服务负责 **Blender 渲染队列、任务状态与 MP4 回传**，并接收浏览器本地提取的姿态点来生成独立人偶场景。
 
-渲染命令行和编码由 `blender/render_clay.py` 决定（与 `交接/blender/render_clay.py` 同源）。
+渲染命令行和编码由 `blender/render_clay.py` 决定。
 本服务不做视频模型推理，也不修改用户已有 `.blend`；人偶场景由 `blender/create_pose_scene.py` 从姿态点单独构建。
+
+源码与问题反馈：<https://github.com/pidan888/infinite-canvas-blender-bridge>
 
 ---
 
@@ -12,7 +14,7 @@
 
 每位用户在自己的电脑安装 Node.js 18 或以上以及 Blender。桥接默认只监听
 `127.0.0.1:13003`，场景库和 Blender 均在该电脑，不需要把桥接端口暴露到局域网。
-发布 npm 包后，在运行 Blender 的电脑上打开终端：
+在运行 Blender 的电脑上打开终端：
 
 ```powershell
 npx infinite-canvas-blender-bridge@latest authorize http://画布地址:3000
@@ -30,8 +32,8 @@ npx infinite-canvas-blender-bridge@latest
 ```
 
 保持该窗口运行；更换画布 Origin 需重新授权，修改授权后需重启桥接。同事访问同一个画布时，
-各自都需要在自己的电脑执行上述步骤。未发布 npm 包时，这些公开 npx 命令不能使用；
-开发者可在源码目录分别运行 `node index.js authorize <网页Origin>` 和 `node index.js`。
+各自都需要在自己的电脑执行上述步骤。从源码运行时，可在源码目录分别运行
+`node index.js authorize <网页Origin>` 和 `node index.js`。
 
 默认场景库为 `%LOCALAPPDATA%\InfiniteCanvas\blender-scenes`，也可使用 `BLENDER_SCENE_DIR`
 指定。桥接探测不到 Blender 时可用 `BLENDER_EXE` 指向本机 `blender.exe`。
@@ -52,6 +54,7 @@ HTTPS 页面访问本机 HTTP 桥接的浏览器限制因环境而异，需在�
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `BLENDER_EXE` | 空，自动探测 | 各机安装位置不同，禁止硬编码 |
+| `BLENDER_SEARCH_DIRS` | 空 | 便携版装在非常规目录时，用分号分隔追加探测根目录 |
 | `BLENDER_PORT` | `13003` | 桥接端口 |
 | `BLENDER_SHARED` | 关 | **置 `1` 即进集中模式**，自动绑 `0.0.0.0`，不用再算绑定地址 |
 | `BLENDER_BIND` | 跟随模式 | 想只开某张网卡时显式指定，优先级高于 `BLENDER_SHARED` |
@@ -65,6 +68,7 @@ HTTPS 页面访问本机 HTTP 桥接的浏览器限制因环境而异，需在�
 | `BLENDER_SECURITY_DIR` | 用户数据目录下的 `InfiniteCanvas/blender-bridge-security` | 本机授权配置目录；应仅供当前用户访问 |
 
 自动探测顺序：`BLENDER_EXE` → `Program Files/Blender Foundation/*` → 便携安装根目录（`blender*`）→ `PATH`。
+便携根目录默认查 `%LOCALAPPDATA%/Programs`、`C:/Blender`、`D:/Blender`，其他位置用 `BLENDER_SEARCH_DIRS` 指定。
 
 ### 两种模式
 
@@ -204,7 +208,7 @@ curl -X POST http://127.0.0.1:13003/render \
 
 1. 启动桥接：`node index.js`
 2. 画布 → 渠道 → 新增**视频**能力模型，Base URL 填 `http://127.0.0.1:13003`（集中模式填启动日志打印的局域网地址）
-3. 打开「调用脚本」，粘贴 `交接/blender/blender-clay-channel-script.js`
+3. 打开「调用脚本」，粘贴画布项目提供的 `blender-clay-channel-script.js`
 4. 场景文件两种给法：渠道里模型名直接写 `.blend` 路径，或在桥接上设 `BLENDER_DEFAULT_SCENE`
 5. 画布正常生成即可，白模 MP4 会作为视频结果落到节点，可继续连给 Seedance 当参考视频
 
