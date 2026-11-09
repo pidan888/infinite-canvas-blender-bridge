@@ -1,0 +1,6 @@
+node_modules/
+*.tgz
+.tmp-scenes/
+tmp/
+*.log
+.DS_Store

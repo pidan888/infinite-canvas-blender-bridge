@@ -1,0 +1,49 @@
+{
+  "name": "infinite-canvas-blender-bridge",
+  "version": "0.1.0",
+  "description": "Local HTTP bridge that renders Blender clay previews for Infinite Canvas.",
+  "license": "MIT",
+  "author": "pidan888",
+  "type": "module",
+  "main": "./index.js",
+  "bin": {
+    "infinite-canvas-blender-bridge": "index.js"
+  },
+  "files": [
+    "index.js",
+    "pose-scene.js",
+    "lib.js",
+    "lib/",
+    "blender/render_clay.py",
+    "blender/create_pose_scene.py",
+    "blender/make_demo_scene.py",
+    "README.md"
+  ],
+  "keywords": [
+    "blender",
+    "infinite-canvas",
+    "clay-render",
+    "render-farm",
+    "3d",
+    "bridge",
+    "headless"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pidan888/infinite-canvas-blender-bridge.git"
+  },
+  "homepage": "https://github.com/pidan888/infinite-canvas-blender-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/pidan888/infinite-canvas-blender-bridge/issues"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
