@@ -1,6 +1,6 @@
 {
   "name": "infinite-canvas-blender-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local HTTP bridge that renders Blender clay previews for Infinite Canvas.",
   "license": "MIT",
   "author": "pidan888",

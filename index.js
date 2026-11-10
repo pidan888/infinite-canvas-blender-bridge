@@ -320,8 +320,10 @@ function execute(task) {
     task.workDir = mkdtempSync(join(tmpdir(), "blender-bridge-"));
     const out = join(task.workDir, `${task.id}.mp4`);
     // 关键帧走文件：几十 KB 的 JSON 塞进 argv 会撞 Windows 的 8191 字符上限
+    // 只有真的带关键帧才写文件：render_clay.py 的 load_shot() 要求至少 2 个关键帧，
+    // 把「沿用相机自带运镜」（keys 为空）的 shot 交给它，会被判成 BAD_SHOT 直接失败。
     let shotPath = null;
-    if (task.params.shot) {
+    if (task.params.shot?.keys?.length) {
       shotPath = join(task.workDir, "shot.json");
       writeFileSync(shotPath, JSON.stringify(task.params.shot), "utf8");
     }
